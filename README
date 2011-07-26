@@ -1,0 +1,43 @@
+Server and client code for creating real time group-editable form fields. Right now this is just a proof of concept. Please see TODO for information on what needs to happen before this is more widely usable.
+
+Installation
+-------------
+1. includes/config.inc.editme - rename to config.inc and add your db info
+2. import db structure from files in sql/
+
+
+Demo Files
+-------------
+index.php - this is a hardcoded demo that uses a doc with id 1
+
+templates/pages/index.inc - currently contains all javascript for driving the front-end diff and merging. this code will eventually be moved to assets/js
+
+
+JSON(P) API
+-------------
+api/createdocument.php - returns JSON(P) with id of a new document
+
+api/getdocument.php?doc_id=[id] - returns JSON(P) with document revision and content
+
+api/getupdates.php?doc_id=[id]&rev_id=[revision] - returns JSON(P) with all diff revisions since supplied rev_id
+
+api/submitrevision.php
+ POST: doc_id=[id] current_rev=[rev_id] loc=[change_location] op=['add' or 'del'] data=['added or deleted string']
+ RETURNS: JSON of latest document revision
+
+
+TODO
+-------------
+
+- need simple auth/security infrastructure around document updates. Ie. need a read only mode with unguessable url, and some kind of edit key without which changes can't be made.
+
+- break out front end javascript into simple to use jQuery module. should be able to do something like $('#textarea_id').groupedit( server, docid, editkey );
+
+- might need to revisit get-vs-post for updates. want this to work cross-domain, but need to do a security audit and deal with message sise limitations of a get request.
+
+- probably need to prune old revisions to keep database from getting too full
+
+- API for making snapshots?
+
+- API for retrieving old versions / interface for doing rollbacks.
+
